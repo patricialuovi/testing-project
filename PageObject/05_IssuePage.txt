@@ -1,0 +1,48 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+Documentation	Issue Test scenario. CRUD Operation: Create, Read, Update, Delete
+Pre Condition	User is logged in and has an existing project
+Post Condition	User logs out and browser closes
+Tags	Issue, TS-Issue
+
+
+#******************* Common Variables ********************
+
+*** Variables ***
+IssueUrl = IssueUrl = https://gitlab.com/patricialuovi1/testing-project/-/issues/new
+IssueTitle = First issue
+UpdatedIssueTitle = Updated issue title
+
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+
+Create New Issue
+    Navigate To Issue Page  IssueUrl
+    Input Issue Title  IssueTitle
+    Input Issue Description  "This is a new issue"
+    Submit Issue
+    Verify Page Should Contain "Issue was successfully created"
+
+Update Issue Title
+    Navigate To Existing Issue
+    Click Edit Icon
+    Change Issue Title To  UpdatedIssueTitle
+    Save Changes
+    Verify Page Should Contain UpdatedIssueTitle
+
+Create Duplicate Issue
+    Navigate To Issue Page  IssueUrl
+    Input Issue Title  UpdatedIssueTitle
+    Submit Issue
+    Verify Page Should Contain "Title has already been taken"
+
+Delete Issue
+    Navigate To Existing Issue
+    Click Delete Icon
+    Confirm Deletion
+    Verify Page Should Contain "Issue was successfully deleted"
+

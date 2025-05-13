@@ -1,0 +1,66 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+Documentation	User Registration Test scenario with verification, valid and invalid credentials.
+Pre Condition	Browser is open and user is on the Sign-Up page
+Post Condition	Browser closes after test
+Tags	Registration, TS-Register
+
+
+#******************* Common Variables ********************
+
+*** Variables ***
+RegistrationUrl = https://gitlab.com/users/sign_up
+Valid_Username = testuser123
+Valid_Email = testuser123@example.com
+Valid_Password = ValidPass123
+Invalid_Email = notanemail
+Empty = 
+
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+Register With Valid Credentials
+    Navigate To Registration Page  RegistrationUrl
+    Input Username  Valid_Username
+    Input Email     Valid_Email
+    Input Password  Valid_Password
+    Submit Registration Form
+    Verify Page Should Contain confirmation message or welcome
+
+Register With Existing Username
+    Navigate To Registration Page  RegistrationUrl
+    Input Username  Valid_Username
+    Input Email     validemail2@example.com
+    Input Password  Valid_Password
+    Submit Registration Form
+    Verify Page Should Contain "username has already been taken"
+
+Register With Empty Password
+    Navigate To Registration Page  RegistrationUrl
+    Input Username  newuser123
+    Input Email     newemail@example.com
+    Input Password  Empty
+    Submit Registration Form
+    Verify Page Should Contain "This field is required" or similar error
+
+Register With Invalid Email
+    Navigate To Registration Page  RegistrationUrl
+    Input Username  anotheruser
+    Input Email     Invalid_Email
+    Input Password  Valid_Password
+    Submit Registration Form
+    Verify Page Should Contain "email is invalid"
+
+Register Without Recaptcha
+    Navigate To Registration Page  RegistrationUrl
+    Input Username  recaptchauser
+    Input Email     recaptcha@example.com
+    Input Password  Valid_Password
+    (Do not complete recaptcha)
+    Submit Registration Form
+    Verify Page Should Contain "Please complete the recaptcha"
+
+

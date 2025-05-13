@@ -1,0 +1,54 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+Documentation	Project Test scenario. CRUD Operation: Create, Read, Update, Delete
+Pre Condition	User is logged in and on Project creation page
+Post Condition	User is logged out after test
+Tags	Project, TS-Project
+
+
+#******************* Common Variables ********************
+
+*** Variables ***
+ProjectUrl = https://gitlab.com/projects/new#blank_project
+ProjectName = FirstProject
+UpdatedProjectName = UpdatedProject
+DuplicateProjectName = FirstProject
+
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+
+Create Blank Project
+    Navigate To Project Page  ProjectUrl
+    Input Project Name  ProjectName
+    Click Create Project Button
+    Verify Page Should Contain "Project 'FirstProject' was successfully created."
+
+Create Project From Template
+    Navigate To Template Project Page  https://gitlab.com/projects/new#create_from_template
+    Choose Template "NodeJS" (or any)
+    Input Project Name  ProjectName
+    Click Create Project Button
+    Verify Project Is Created Successfully
+
+Update Project Name
+    Navigate To Project Settings
+    Edit Project Name Field  UpdatedProjectName
+    Save Changes
+    Verify Page Should Contain "Project name updated successfully"
+
+Create Project With Duplicate Name
+    Navigate To Project Page  ProjectUrl
+    Input Project Name  DuplicateProjectName
+    Click Create Project Button
+    Verify Page Should Contain "Project name has already been taken"
+
+Delete Project
+    Navigate To Project Settings
+    Scroll To Remove Project Section
+    Confirm Project Deletion
+    Verify Page Should Contain "Project deleted successfully"
+
